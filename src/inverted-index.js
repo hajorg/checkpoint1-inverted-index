@@ -98,9 +98,8 @@ class InvertedIndex {
             }
             console.log(result);
             return result;
-        } else {
-            alert('empty');
         }
+        return {};
     }
 }
 let ivd = new InvertedIndex();
