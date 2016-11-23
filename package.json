@@ -4,7 +4,7 @@
   "description": "Inverted index for uploaded files",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/karma/binarma start"
+    "test": "node_modules/karma/bin/karma start"
   },
   "repository": {
     "type": "git",
