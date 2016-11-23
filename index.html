@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="src/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="src/css/bootstrap.min.css">
+<!--
+        <link rel="stylesheet" href="src/css/font-awesome.min.css">
+        <link rel="stylesheet" href="src/css/fontawesome-webfont.woff">
+-->
+        <script src="src/angular.js"></script>
+        <script src="src/inverted-index.js"></script>
+        <script src="src/app.js"></script>
+        <script src="https://use.fontawesome.com/34f5dbde04.js"></script>
+        
+    </head>
+    <body>
+        <div ng-controller="myController" ng-model="index">
+            <div class="container-fluid">
+                <h3 class="text-center">Inverted Index</h3>
+                <div class="jumbotron">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <input type="file" name="fileUploaded" id="fileUploaded" multiple>
+                            <select ng-model="selectFile" class="form-control">
+                                <option value="">--Select file--</option>
+                                <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
+                            </select>
+                            <button ng-click="createIndex()" class="btn btn-primary"> Create Index</button>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="col-xs-4">
+                                <input type="text" class="form-control" id="searchTerms" name="searhTerms" placeholder="Search for words in file..." ng-model="searchIndex" ng-show="display"/>
+                            </span>
+                            <span class="col-xs-4">
+                                <select ng-model="selectValue" class="form-control text-center">
+                                    <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
+                                    <option value="all" selected>--All--</option>
+                                </select>
+                                
+                            </span>
+                            <input type="button" id="searcher" value="search index" ng-click="search()" ng-show="display" class="btn btn-primary" ng-show="display"/>
+                            <table class="create-index table" ng-show="displayTable">
+                                <thead class="table-striped">
+                                <tr>
+                                    <th>
+                                        Token
+                                    </th>
+                                    <th ng-repeat="c in count">
+                                        {{ 'Doc '+c }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="(token, value) in index">
+                                    <td>{{ token }}</td>
+                                    {{ length }}
+                                    <td ng-repeat="c in count">
+                                        <span ng-repeat="doc in value">
+                                            <span ng-if = "c == doc">
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+<!--                            multiple files-->
+                            <span ng-show="triggerSearchAll">
+                            <div ng-repeat="(token, value) in index">
+                                {{token}}
+                            <table class="create-index table">
+                                <thead class="table-striped">
+                                <tr>
+                                    <th>
+                                        Token
+                                    </th>
+                                    <th ng-repeat="c in count">
+                                        {{ 'Doc '+c }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="(key, val) in value">
+                                    <td>{{ key }}</td>
+                                    {{ length }}
+                                    <td ng-repeat="c in count">
+                                        <span ng-repeat="doc in val">
+                                            <span ng-if = "c == doc">
+                                                <i class="fa fa-check" aria-hidden="true"></i>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
