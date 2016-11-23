@@ -1,0 +1,23 @@
+{
+  "name": "inverted-index",
+  "version": "1.0.0",
+  "description": "Inverted index for uploaded files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andela-jare/inverted-index.git"
+  },
+  "author": "Jorg Are",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andela-jare/inverted-index/issues"
+  },
+  "homepage": "https://github.com/andela-jare/inverted-index#readme",
+  "devDependencies": {
+    "browser-sync": "^2.18.1",
+    "gulp": "^3.9.1"
+  }
+}
