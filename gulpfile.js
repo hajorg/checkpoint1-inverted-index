@@ -8,13 +8,6 @@ gulp.task('browserSyn', () => {
         }
     });
 });
-gulp.task('watch',['browserSyn'], () => {
+gulp.task('app',['browserSyn'], () => {
    gulp.watch(['public/*.css', '*.html', 'src/*.js', '*.js', 'spec/*.js', 'public/src/*.js'], browserSync.reload);
 });
-//
-//gulp.watch('public/*.css', browserSync.reload);
-//   gulp.watch('*.html', browserSync.reload);
-//   gulp.watch('src/*.js', browserSync.reload);
-//   gulp.watch('*.js', browserSync.reload);
-//   gulp.watch('spec/*.js', browserSync.reload);
-//   gulp.watch('public/src/*.js', browserSync.reload);

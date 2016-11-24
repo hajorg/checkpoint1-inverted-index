@@ -1,105 +1,108 @@
+/**
+*Inverted Index class
+*/
 class InvertedIndex {
-    constructor() {
-        this.indexMap = {};
-        this.allFiles = [];
-        this.error = "error";
-        this.uploadedFiles = {};
+  /**
+  * Called when InvertedIndex class is instantiated
+  * @constructor
+  */
+  constructor() {
+    this.indexMap = {};
+    this.uploadedFiles = {};
+  }
+  /**
+  * Checks if a file is a valid json
+  * @param {string} file - file contents
+  * @return {boolean} returns a boolean or string
+  */
+  isValidJson(file) {
+    try {
+      JSON.parse(file);
+      return true;
+    } catch (err) {
+      return 'Invalid Json file';
     }
-    getFile(file) {
-        this.allFiles = [];
-        let _this = this;
-        let reader = new FileReader();
-        let error = false;
-        reader.onloadend = e => {
-            try{
-                let valid = _this.checkJson(JSON.parse(e.target.result), file);
-                if (valid) {
-                    this.uploadedFiles[file.name] = JSON.parse(e.target.result);
-                    return true;
-                }
-                alert('error');
-            }catch (e) {                
-               this.error = "File is not a valid JSON";
-                alert(this.error);
-                error = true;
-            }
+  }
+  /**
+  * Checks if a file name has a .json extension
+  * @param {string} file - file name
+  * @returns {boolean} returns a boolean or string
+  */
+  checkJson(file) {
+    if (file.name.split('.')[1] !== 'json') {
+      return 'invalid json file';
+    }
+    return true;
+  }
+  /**
+  * @method
+  * @param {string} file - The name of file to create index for
+  * @returns {boolean} returns true if index is created
+  */
+  createIndex(file) {
+    this.counter = [];
+    //  An object that will hold each unique word and show which file the words are found
+    this.fileIndex = {};
+    //  Loop through an array of the json file
+    this.uploadedFiles[file].forEach((obj, id) => {
+      this.counter.push(id);
+      const text = obj.text.toLowerCase().match(/\w+/g);
+      const title = obj.title.toLowerCase().match(/\w+/g);
+      const mySet = new Set(text.concat(title));
+      const uniqueWords = Array.from(mySet.values());
+        for (const i in uniqueWords) {
+          if (uniqueWords[i] in this.fileIndex) {
+            this.fileIndex[uniqueWords[i]].push(id);
+          } else {
+            this.fileIndex[uniqueWords[i]] = [id];
+          }
         }
-        reader.readAsText(file);
+    });
+    this.indexMap[file] = this.fileIndex;
+    if (this.fileIndex) {
+      return true;
     }
-    isValidJson(file) {
-        try {
-            JSON.parse(file);
-            return true;
-        } catch (err) {
-            return 'Invalid Json file';
-        }     
-    }
-    checkJson(content, file) {
-//        if (result.length === 0) {
-//            alert('empty array');
-//            this.allFiles.pop();
-//            return false;
-//        }
-        if (file.name.split(".")[1] !== "json") {
-//            alert('error');
-            return "invalid json file";
+  }
+  /**
+  * @method
+  * @param {string} file - The name of file to get generated index for.
+  * @returns {object} The created index for a particular file
+  */
+  getIndex(file) {
+    return this.indexMap[file];
+  }
+  /**
+  * @method
+  * @param {string} words - A sentence to search for .
+  * @param {string} file - The name of file to get generated index for.
+  * @returns {object} The created index for a particular file
+  */
+  searchIndex(words, file) {
+    if (words.length > 0) {
+      words = words.match(/\w+/g);
+      const index = this.getIndex(file);
+      const result = {};
+      if (file !== 'all') {
+        words.forEach((word) => {
+        if (index.hasOwnProperty(word)) {
+          result[word] = index[word];
         }
-        return true;
-    }
-    getAllFiles() {
-        return this.allFiles;
-    }
-    createIndex(file) {
-        this.counter = [];
-        //An object that will hold each unique word and show which file the words are found
-        this.fileIndex = {};
-        //Loop through an array of the json file
-        this.uploadedFiles[file].forEach((obj, id) => {
-            this.counter.push(id);
-            let text = obj.text.toLowerCase().match(/\w+/g);
-            let title = obj.title.toLowerCase().match(/\w+/g);
-            let mySet = new Set(text.concat(title));
-            const uniqueWords = Array.from(mySet.values());
-            for (let i in uniqueWords) {
-                if (uniqueWords[i] in this.fileIndex) {
-                    this.fileIndex[uniqueWords[i]].push(id);
-                } else {
-                    this.fileIndex[uniqueWords[i]] = [id];
-                }
-            }
+      });
+    } else {
+      const newObj = {};
+      for(let i in this.indexMap) {
+        words.forEach((word) => {
+          if (this.indexMap[i].hasOwnProperty(word)) {
+            newObj[word] = this.indexMap[i][word];
+          }
         });
-        this.indexMap[file] = this.fileIndex;
-                console.log(this.indexMap);
+        result[i] = newObj;
+      }
     }
-    getIndex(file) {
-        return this.indexMap[file];
+    console.log(result);
+    return result;
     }
-    searchIndex(arr, file) {
-        if (arr.length > 0) {
-            arr = arr.split(" ");
-            const index = this.getIndex(file);
-            const result = {};
-            if(file !== "all") {
-                arr.forEach((word) => {
-                    if (index.hasOwnProperty(word)) {
-                        result[word] = index[word];
-                    }
-                });
-            } else {
-                let newObj = {};
-                for(let i in this.indexMap) {
-                    arr.forEach((word) => {
-                        if (this.indexMap[i].hasOwnProperty(word)) {
-                            newObj[word] = this.indexMap[i][word];
-                        }
-                    });
-                    result[i] = newObj;
-                }
-            }
-            console.log(result);
-            return result;
-        }
-        return {};
+    return {};
     }
 }
-let ivd = new InvertedIndex();
+  let ivd = new InvertedIndex();

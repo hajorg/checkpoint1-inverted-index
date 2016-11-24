@@ -1,45 +1,65 @@
 var app = angular.module("myApp", []);
 app.controller("myController", function ($scope) {
+    $scope.ivd = new InvertedIndex();
     //Make search input file and button hidden
     $scope.display = false;
     $scope.displayTable = false;
     //Get a list names of the uploaded files
     $scope.uploaded = [];
 //    Get the uploaded file
+    function checkJson(content, file) {
+        if (file.name.split(".")[1] !== "json") {
+            return "invalid json file";
+        }
+        return true;
+    }
+    $scope.getFile = function (file) {
+        let reader = new FileReader();
+        reader.onloadend = e => {
+            try{
+                $scope.ivd.uploadedFiles[file.name] = JSON.parse(e.target.result);
+                if($scope.uploaded.indexOf(file.name) === -1) {
+                    $scope.uploaded.push(file.name);
+                    $scope.$apply();
+                }
+            }catch (e) {                
+                console.log('error');
+            }
+        }
+        reader.readAsText(file);
+    }
     document.getElementById('fileUploaded').addEventListener('change', function (e) {
         for (let i = 0; i < e.target.files.length; i++) {
-            ivd.getFile(e.target.files[i]);
-            if($scope.uploaded.indexOf(e.target.files[i].name) === -1) {
-                $scope.uploaded.push(e.target.files[i].name);
-            }
-            
+            $scope.getFile(e.target.files[i]);
         }
-        $scope.$apply();
-        console.log(ivd.uploadedFiles);
     });
     //count the number of document in a file
     $scope.counter = [];
     $scope.error = ivd.error;
     $scope.triggerSearchAll = false;
+    $scope.getCount = function (filename) {
+        $scope.ivd.getDocCount(filename);
+    }
     $scope.createIndex = function() {
-        ivd.createIndex($scope.selectFile);
-        $scope.index = ivd.getIndex($scope.selectFile);
+        $scope.ivd.createIndex($scope.selectFile);
+        $scope.index = $scope.ivd.getIndex($scope.selectFile);
         $scope.display = true;
         $scope.displayTable = true;
-        $scope.count = ivd.counter;
+        $scope.count = $scope.ivd.counter;
+        
         $scope.triggerSearchAll = false;
         $scope.search = function() {
-//            $scope.searched = ivd.searchIndex($scope.searchIndex,$scope.selectValue);
+//            $scope.searched = ivd.searchIndex($scope.searchIndex,$scope.selectContent);
             if ($scope.searchIndex !== '') {
-                if ($scope.selectValue) { 
+                if ($scope.selectContent) { 
                     $scope.triggerSearchAll = true;
-                    if ($scope.selectValue == 'all') {
+                    if ($scope.selectContent == 'all') {
                         $scope.displayTable = false;
                     } else {
                         $scope.triggerSearchAll = false;
                         $scope.displayTable = true;
                     }
-                    $scope.index = ivd.searchIndex($scope.searchIndex,$scope.selectValue);
+                    $scope.index = $scope.ivd.searchIndex($scope.searchIndex,$scope.selectContent);
                 } else {
                     alert('You must select a file to search');
                 }

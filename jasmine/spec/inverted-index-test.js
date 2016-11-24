@@ -29,8 +29,10 @@ describe('Inverted Index', function () {
         });
         it('reads the JSON file and asserts that it is not empty', function(){
             expect(ivd.isValidJson(file3)).toBe(true);
-            expect(ivd.isValidJson(file1)).toBe('Invalid Json file');
         });
+        it('reads the JSON file and asserts that file is invalid', function () {
+            expect(ivd.isValidJson(file1)).toBe('Invalid Json file');
+        })
     });
     describe('Populate Index', function () {
         it('verifies that the index is created once the JSON file has been read', function() {
@@ -38,6 +40,12 @@ describe('Inverted Index', function () {
             ivd.createIndex('file1.json');
             let indexed = ivd.getIndex('file1.json');
             expect(typeof indexed).toBe('object');
+        });
+        it('verifies that the index returned is an object', function () {
+            ivd.uploadedFiles['file1.json'] = file1;
+            ivd.createIndex('file1.json');
+            let indexed = ivd.getIndex('file1.json');
+            expect(typeof ivd.getIndex('file1.json')).toBe('object');
             expect(indexed.an).toEqual([0]);
             expect(indexed.a).toEqual([0, 1]);
         });
