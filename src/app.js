@@ -17,13 +17,13 @@ app.controller("myController", function ($scope) {
         let reader = new FileReader();
         reader.onloadend = e => {
             try{
-                $scope.ivd.uploadedFiles[file.name] = JSON.parse(e.target.result);
-                if($scope.uploaded.indexOf(file.name) === -1) {
-                    $scope.uploaded.push(file.name);
-                    $scope.$apply();
-                }
+              $scope.ivd.uploadedFiles[file.name] = JSON.parse(e.target.result);
+              if($scope.uploaded.indexOf(file.name) === -1) {
+                $scope.uploaded.push(file.name);
+                $scope.$apply();
+              }
             }catch (e) {                
-                console.log('error');
+                alert('Invalid json file');
             }
         }
         reader.readAsText(file);
@@ -33,18 +33,14 @@ app.controller("myController", function ($scope) {
             $scope.getFile(e.target.files[i]);
         }
     });
-    //count the number of document in a file
-    $scope.counter = [];
     $scope.error = ivd.error;
     $scope.triggerSearchAll = false;
-    $scope.getCount = function (filename) {
-        $scope.ivd.getDocCount(filename);
-    }
     $scope.createIndex = function() {
         $scope.ivd.createIndex($scope.selectFile);
         $scope.index = $scope.ivd.getIndex($scope.selectFile);
         $scope.display = true;
         $scope.displayTable = true;
+        //count the number of document in a file
         $scope.count = $scope.ivd.counter;
         
         $scope.triggerSearchAll = false;
@@ -66,7 +62,6 @@ app.controller("myController", function ($scope) {
             } else {
                 alert('no search word found');
             }
-//            console.log($scope.searched);
         }
     }
 });

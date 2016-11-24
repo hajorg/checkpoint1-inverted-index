@@ -29,8 +29,15 @@ class InvertedIndex {
   * @returns {boolean} returns a boolean or string
   */
   checkJson(file) {
-    if (file.name.split('.')[1] !== 'json') {
-      return 'invalid json file';
+    if (!this.uploadedFiles[file][0]) {
+      alert('Invalid format');
+      delete this.uploadedFiles[file];
+      return false;
+    }
+    if (this.uploadedFiles[file][0].title && this.uploadedFiles[file][0].text) {
+      return true;
+    } else {
+      return false;
     }
     return true;
   }
@@ -40,27 +47,30 @@ class InvertedIndex {
   * @returns {boolean} returns true if index is created
   */
   createIndex(file) {
-    this.counter = [];
-    //  An object that will hold each unique word and show which file the words are found
-    this.fileIndex = {};
-    //  Loop through an array of the json file
-    this.uploadedFiles[file].forEach((obj, id) => {
-      this.counter.push(id);
-      const text = obj.text.toLowerCase().match(/\w+/g);
-      const title = obj.title.toLowerCase().match(/\w+/g);
-      const mySet = new Set(text.concat(title));
-      const uniqueWords = Array.from(mySet.values());
-        for (const i in uniqueWords) {
-          if (uniqueWords[i] in this.fileIndex) {
-            this.fileIndex[uniqueWords[i]].push(id);
-          } else {
-            this.fileIndex[uniqueWords[i]] = [id];
+//    this.checkJson(file);
+    if (this.checkJson(file)) {
+      this.counter = [];
+      //  An object that will hold each unique word and show which file the words are found
+      this.fileIndex = {};
+      //  Loop through an array of the json file
+      this.uploadedFiles[file].forEach((obj, id) => {
+        this.counter.push(id);
+        const text = obj.text.toLowerCase().match(/\w+/g);
+        const title = obj.title.toLowerCase().match(/\w+/g);
+        const mySet = new Set(text.concat(title));
+        const uniqueWords = Array.from(mySet.values());
+          for (const i in uniqueWords) {
+            if (uniqueWords[i] in this.fileIndex) {
+              this.fileIndex[uniqueWords[i]].push(id);
+            } else {
+              this.fileIndex[uniqueWords[i]] = [id];
+            }
           }
-        }
-    });
-    this.indexMap[file] = this.fileIndex;
-    if (this.fileIndex) {
-      return true;
+      });
+      this.indexMap[file] = this.fileIndex;
+      if (this.fileIndex) {
+        return true;
+      }
     }
   }
   /**
@@ -99,10 +109,9 @@ class InvertedIndex {
         result[i] = newObj;
       }
     }
-    console.log(result);
     return result;
     }
     return {};
     }
 }
-  let ivd = new InvertedIndex();
+let ivd = new InvertedIndex();

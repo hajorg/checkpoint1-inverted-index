@@ -3,5 +3,4 @@
 # Ignore all except the app folder
 ./*
 !src/inverted-index.js
-!src/app.js
 

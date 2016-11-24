@@ -34,7 +34,7 @@
                                 <input type="text" class="form-control" id="searchTerms" name="searhTerms" placeholder="Search for words in file..." ng-model="searchIndex" ng-show="display"/>
                             </span>
                             <span class="col-xs-4">
-                                <select ng-model="selectContent" class="form-control text-center">
+                                <select ng-model="selectContent" class="form-control text-center" ng-show="display">
                                     <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
                                     <option value="all" selected>--All--</option>
                                 </select>
