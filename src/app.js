@@ -45,7 +45,7 @@ app.controller("myController", function ($scope) {
   });
   $scope.createIndex = function() {
     $scope.error = '';
-    if ($scope.selectFile == '' || $scope.selectFile == undefined) {
+    if ($scope.selectFile === '' || $scope.selectFile === undefined) {
       $scope.error = 'You have to select a valid file to upload';
       return;
     }
@@ -66,7 +66,7 @@ app.controller("myController", function ($scope) {
     if ($scope.searchIndex) {
       if ($scope.selectContent) {
         $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex,$scope.selectContent);
-        if ($scope.index == false) {
+        if ($scope.index === false) {
           $scope.error = 'Invalid search word entered';
         }
       } else {
