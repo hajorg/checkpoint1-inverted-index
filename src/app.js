@@ -2,7 +2,7 @@ let ivd = new InvertedIndex();
 var app = angular.module("myApp", []);
 app.controller("myController", function ($scope) {
   $scope.error = '';
-  $scope.ivd = new InvertedIndex();
+  $scope.invertedIndex = new InvertedIndex();
   //  Make search input file and button hidden
   $scope.display = false;
   //  Get a list names of the uploaded files
@@ -20,9 +20,9 @@ app.controller("myController", function ($scope) {
     let reader = new FileReader();
     reader.onloadend = e => {
       try{
-        $scope.ivd.uploadedFiles[file.name] = JSON.parse(e.target.result);
-        if (!$scope.ivd.uploadedFiles[file.name][0]) {
-          delete $scope.ivd.uploadedFiles[file.name];
+        $scope.invertedIndex.uploadedFiles[file.name] = JSON.parse(e.target.result);
+        if (!$scope.invertedIndex.uploadedFiles[file.name][0]) {
+          delete $scope.invertedIndex.uploadedFiles[file.name];
           alert('Invalid file format');
           return false;
         }
@@ -49,12 +49,12 @@ app.controller("myController", function ($scope) {
       $scope.error = 'You have to select a valid file to upload';
       return;
     }
-    if ($scope.ivd.createIndex($scope.selectFile)) {
-      $scope.index = $scope.ivd.getIndex($scope.selectFile);
+    if ($scope.invertedIndex.createIndex($scope.selectFile)) {
+      $scope.index = $scope.invertedIndex.getIndex($scope.selectFile);
       //  show search form
       $scope.display = true;
       //  count the number of document in a file
-      $scope.tableHeader[$scope.selectFile] = $scope.ivd.allCounter[$scope.selectFile];
+      $scope.tableHeader[$scope.selectFile] = $scope.invertedIndex.allCounter[$scope.selectFile];
     } else {
       $scope.uploaded.pop();
       return;
@@ -65,7 +65,7 @@ app.controller("myController", function ($scope) {
     $scope.error = '';
     if ($scope.searchIndex) {
       if ($scope.selectContent) {
-        $scope.index = $scope.ivd.searchIndex($scope.searchIndex,$scope.selectContent);
+        $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex,$scope.selectContent);
         if ($scope.index == false) {
           $scope.error = 'Invalid search word entered';
         }
