@@ -16,12 +16,14 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
         'src/inverted-index.js',
+        'jasmine/spec/factory.js',
         'jasmine/spec/inverted-index-test.js'
     ],
 
 
     // list of files to exclude
     exclude: [
+      'src/app.js'
     ],
 
 

@@ -14,93 +14,95 @@
         <script src="src/app.js"></script>
         <script src="https://use.fontawesome.com/34f5dbde04.js"></script>
         
-    </head>
-    <body>
-        <div ng-controller="myController" ng-model="index">
-            <div class="container-fluid">
-                <h3 class="text-center">Inverted Index</h3>
-                <div class="jumbotron">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <input type="file" name="fileUploaded" id="fileUploaded" multiple>
-                            <select ng-model="selectFile" class="form-control">
-                                <option value="">--Select file--</option>
-                                <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
-                            </select>
-                            <button ng-click="createIndex()" class="btn btn-primary"> Create Index</button>
-                        </div>
-                        <div class="col-md-8">
-                            <span class="col-xs-4">
-                                <input type="text" class="form-control" id="searchTerms" name="searhTerms" placeholder="Search for words in file..." ng-model="searchIndex" ng-show="display"/>
-                            </span>
-                            <span class="col-xs-4">
-                                <select ng-model="selectContent" class="form-control text-center" ng-show="display">
-                                    <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
-                                    <option value="all" selected>--All--</option>
-                                </select>
-                                
-                            </span>
-                            <input type="button" id="searcher" value="search index" ng-click="search()" ng-show="display" class="btn btn-primary" ng-show="display"/>
-                            <table class="create-index table" ng-show="displayTable">
-                                <thead class="table-striped">
-                                <tr>
-                                    <th>
-                                        Token
-                                    </th>
-                                    <th ng-repeat="c in count">
-                                        {{ 'Doc '+c }}
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="(token, value) in index">
-                                    <td>{{ token }}</td>
-                                    {{ length }}
-                                    <td ng-repeat="c in count">
-                                        <span ng-repeat="doc in value">
-                                            <span ng-if = "c == doc">
-                                                <i class="fa fa-check" aria-hidden="true"></i>
-                                            </span>
-                                        </span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-<!--                            multiple files-->
-                            <span ng-show="triggerSearchAll">
-                            <div ng-repeat="(token, value) in index">
-                                {{token}}
-                            <table class="create-index table">
-                                <thead class="table-striped">
-                                <tr>
-                                    <th>
-                                        Token
-                                    </th>
-                                    <th ng-repeat="c in count">
-                                        {{ 'Doc '+c }}
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="(key, val) in value">
-                                    <td>{{ key }}</td>
-                                    {{ length }}
-                                    <td ng-repeat="c in count">
-                                        <span ng-repeat="doc in val">
-                                            <span ng-if = "c == doc">
-                                                <i class="fa fa-check" aria-hidden="true"></i>
-                                            </span>
-                                        </span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            </div>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <style>
+      .navbar {
+        background:#337ab7;
+        border: none;
+        border-radius: 0;
+      }
+      .navbar-inverse .navbar-brand {
+        color: #FFF;
+      }
+      .navbar-inverse .navbar-nav> a {
+        background: #337ab7;
+      }
+      .navbar-inverse .navbar-nav>.active>a {
+        background: #337ab7;
+      }
+      .navbar-inverse .navbar-nav>.active>a:hover{
+        background: red;
+      }
+    </style>
+  </head>
+  <body ng-controller="myController" ng-model="index">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Inverted Index</a>
         </div>
-    </body>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">About</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <h3 class="text-center" style="min-height: 26px;">{{ error }}</h3>
+        <div class="col-sm-4">
+          <label class="btn btn-primary" style="margin-bottom: 10px;">Upload File
+          <input class="form-control" type="file" id="fileUploaded" multiple style="display: none;">
+          </label>
+          <div class="input-group">
+          <select ng-model="selectFile" class="form-control">
+            <option value="">--Select file--</option>
+            <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
+          </select>
+          <div class="input-group-btn">
+            <button ng-click="createIndex()" class="btn btn-primary"> Create Index</button>
+          </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <form ng-show="display">
+            <span class="col-xs-4">
+                <select ng-model="selectContent" class="form-control text-center">
+                  <option value="all" selected>--All--</option>
+                  <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
+                </select>                  
+              </span>
+              <div class="input-group col-md-4">
+                <input type="text" class="form-control" id="searchTerms" name="searhTerms" placeholder="Search for words in file..." ng-model="searchIndex" ng-show="display"/>
+                <div class="input-group-btn">
+                  <input type="button" id="searcher" value="search index" ng-click="search()" class="btn btn-primary"/>
+                </div>
+              </div>
+          </form>
+          <div ng-repeat="(key, value) in index">
+            <!-- title of File -->
+            <h4 style="text-align: center; min-width: 100%; ">File : {{ key.replace('.json', '')}}</h4>
+            <!-- Create table -->
+            <table class="table table-responsive table-striped table-bordered" style="max-height: 30px; overflow-y:scroll; text-align: center;">
+              <thead style="background: #337ab7; color: white">
+                <tr>
+                  <th style="text-align: center">Word</th>
+                  <!-- index[1] is a word<==>set map -->
+                  <th style="text-align: center" ng-repeat="tableHead in tableHeader[key]">Doc {{tableHead + 1}}</th>            
+                </tr>
+              </thead>    
+              <tbody>
+                <tr ng-repeat="(key2, value2) in value"> 
+                  <td>{{key2}}</td> 
+                  <td ng-repeat="row in tableHeader[key]">
+                    <span ng-if='value2.indexOf(row) >= 0'>
+                      <i class="fa fa-check" aria-hidden="true"></i>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

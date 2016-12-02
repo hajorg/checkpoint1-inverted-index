@@ -1,63 +1,52 @@
-let file1 = [
-      {
-        "title": "Alice in Wonderland",
-        "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
-      },
-
-      {
-        "title": "The Lord of the Rings: The Fellowship of the Ring.",
-        "text": "Alice falls into a rabbit hole and enters a world full of imagination."
-      }
-    ];
-let file3 = `[
-      {
-        "title": "Alice in Wonderland",
-        "text": "An unusual alliance of man, elf, dwarf, wizard and hobbit seek to destroy a powerful ring."
-      },
-
-      {
-        "title": "The Lord of the Rings: The Fellowship of the Ring.",
-        "text": "Alice falls into a rabbit hole and enters a world full of imagination."
-      }
-    ]`;
-let file2 = 'just a file';
-let filename = 'file1.json';
-describe('Inverted Index', function () {
-    describe('Read book data', function () {
-        beforeEach(function() {
-            let ivd = new InvertedIndex();
-        });
-        it('reads the JSON file and asserts that it is not empty', function(){
-            expect(ivd.isValidJson(file3)).toBe(true);
-        });
-        it('reads the JSON file and asserts that file is invalid', function () {
-            expect(ivd.isValidJson(file1)).toBe('Invalid Json file');
-        })
+/*  eslint-disable no-undef*/
+describe('Inverted Index', () => {
+  const indexer = new InvertedIndex();
+  describe('Read book data', () => {
+    it('reads file and assert that file is a valid file', () => {
+      expect(InvertedIndex.isValidJson(JSON.stringify(file1))).toBe(true);
     });
-    describe('Populate Index', function () {
-        it('verifies that the index is created once the JSON file has been read', function() {
-            ivd.uploadedFiles['file1.json'] = file1;
-            ivd.createIndex('file1.json');
-            let indexed = ivd.getIndex('file1.json');
-            expect(typeof indexed).toBe('object');
-        });
-        it('verifies that the index returned is an object', function () {
-            ivd.uploadedFiles['file1.json'] = file1;
-            ivd.createIndex('file1.json');
-            let indexed = ivd.getIndex('file1.json');
-            expect(typeof ivd.getIndex('file1.json')).toBe('object');
-            expect(indexed.an).toEqual([0]);
-            expect(indexed.a).toEqual([0, 1]);
-        });
+    it('reads the JSON file and asserts that file is invalid', () => {
+      expect(InvertedIndex.isValidJson(file1)).toBe('Invalid Json file');
     });
-    describe('Search Index', function () {
-        it('verifies that searching the index returns an array of the indices', function() {
-            let words = "alice lord";
-            ivd.uploadedFiles['file1.json'] = file1;
-            ivd.createIndex('file1.json');
-            let result = ivd.searchIndex(words, filename);
-            expect(result).toEqual({alice:[0,1], lord:[1]});
-            expect(result = ivd.searchIndex("", filename)).toEqual({});
-        });
+    it('reads the JSON file and asserts that file is format is invalid', () => {
+      indexer.uploadedFiles['file1.json'] = file2;
+      expect(indexer.checkJson('file1.json')).toBe(false);
     });
-})
+  });
+  describe('Populate Index', () => {
+    it('verifies that the index is created once the JSON file has been read', () => {
+      indexer.uploadedFiles['file1.json'] = file1;
+      const creator = indexer.createIndex('file1.json');
+      const indexed = indexer.getIndex('file1.json');
+      expect(typeof indexed).toBe('object');
+      expect(creator).toBe(true);
+    });
+    it('verifies that the index returned is an object', () => {
+      indexer.uploadedFiles['file1.json'] = file1;
+      indexer.createIndex('file1.json');
+      const indexed = indexer.getIndex('file1.json');
+      expect(typeof indexer.getIndex('file1.json')).toBe('object');
+      expect(indexed['file1.json'].an).toEqual([0]);
+      expect(indexed['file1.json'].a).toEqual([0, 1]);
+    });
+  });
+  describe('Search Index', () => {
+    const words = 'alice lord';
+    indexer.uploadedFiles['file1.json'] = file1;
+    indexer.uploadedFiles['file2.json'] = file1;
+    indexer.createIndex('file1.json');
+    indexer.createIndex('file2.json');
+    let result = indexer.searchIndex(words, filename);
+    it(' should verifies that searching the index returns an array of the indices', () => {
+      expect(result).toEqual({ 'file1.json': { alice: [0, 1], lord: [1] } });
+    });
+    it('should return an empty object if no search word is given', () => {
+      expect(result = indexer.searchIndex('', filename)).toEqual({});
+    });
+    it('should return two filename and an object', () => {
+      expect(result = indexer.searchIndex('alice', 'all')).toEqual({
+        'file1.json': { alice: [0, 1] }, 'file2.json': { alice: [0, 1] }
+      });
+    });
+  });
+});

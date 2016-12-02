@@ -1,67 +1,79 @@
+let ivd = new InvertedIndex();
 var app = angular.module("myApp", []);
 app.controller("myController", function ($scope) {
-    $scope.ivd = new InvertedIndex();
-    //Make search input file and button hidden
-    $scope.display = false;
-    $scope.displayTable = false;
-    //Get a list names of the uploaded files
-    $scope.uploaded = [];
-//    Get the uploaded file
-    function checkJson(content, file) {
-        if (file.name.split(".")[1] !== "json") {
-            return "invalid json file";
-        }
-        return true;
+  $scope.error = '';
+  $scope.ivd = new InvertedIndex();
+  //  Make search input file and button hidden
+  $scope.display = false;
+  //  Get a list names of the uploaded files
+  $scope.uploaded = [];
+  // get a list of documents in a file
+  $scope.tableHeader = {};
+  //  Get the uploaded file
+  function checkJson(content, file) {
+    if (file.name.split(".")[1] !== "json") {
+      return "invalid json file";
     }
-    $scope.getFile = function (file) {
-        let reader = new FileReader();
-        reader.onloadend = e => {
-            try{
-              $scope.ivd.uploadedFiles[file.name] = JSON.parse(e.target.result);
-              if($scope.uploaded.indexOf(file.name) === -1) {
-                $scope.uploaded.push(file.name);
-                $scope.$apply();
-              }
-            }catch (e) {                
-                alert('Invalid json file');
-            }
+    return true;
+  }
+  $scope.getFile = function (file) {
+    let reader = new FileReader();
+    reader.onloadend = e => {
+      try{
+        $scope.ivd.uploadedFiles[file.name] = JSON.parse(e.target.result);
+        if (!$scope.ivd.uploadedFiles[file.name][0]) {
+          delete $scope.ivd.uploadedFiles[file.name];
+          alert('Invalid file format');
+          return false;
         }
-        reader.readAsText(file);
+        if($scope.uploaded.indexOf(file.name) === -1) {
+          $scope.uploaded.push(file.name);
+          $scope.$apply();
+        }
+        }catch (e) {                
+          alert('Invalid json file');
+        }
+      }
+      reader.readAsText(file);
+  }
+  // Get uploaded file(s)
+  document.getElementById('fileUploaded').addEventListener('change', (e) => {
+    for (let i = 0; i < e.target.files.length; i++) {
+      $scope.getFile(e.target.files[i]);
+      alert(e.target.files[i].name+' uploaded')
     }
-    document.getElementById('fileUploaded').addEventListener('change', function (e) {
-        for (let i = 0; i < e.target.files.length; i++) {
-            $scope.getFile(e.target.files[i]);
-        }
-    });
-    $scope.error = ivd.error;
-    $scope.triggerSearchAll = false;
-    $scope.createIndex = function() {
-        $scope.ivd.createIndex($scope.selectFile);
-        $scope.index = $scope.ivd.getIndex($scope.selectFile);
-        $scope.display = true;
-        $scope.displayTable = true;
-        //count the number of document in a file
-        $scope.count = $scope.ivd.counter;
-        
-        $scope.triggerSearchAll = false;
-        $scope.search = function() {
-//            $scope.searched = ivd.searchIndex($scope.searchIndex,$scope.selectContent);
-            if ($scope.searchIndex !== '') {
-                if ($scope.selectContent) { 
-                    $scope.triggerSearchAll = true;
-                    if ($scope.selectContent == 'all') {
-                        $scope.displayTable = false;
-                    } else {
-                        $scope.triggerSearchAll = false;
-                        $scope.displayTable = true;
-                    }
-                    $scope.index = $scope.ivd.searchIndex($scope.searchIndex,$scope.selectContent);
-                } else {
-                    alert('You must select a file to search');
-                }
-            } else {
-                alert('no search word found');
-            }
-        }
+  });
+  $scope.createIndex = function() {
+    $scope.error = '';
+    if ($scope.selectFile == '' || $scope.selectFile == undefined) {
+      $scope.error = 'You have to select a valid file to upload';
+      return;
     }
+    if ($scope.ivd.createIndex($scope.selectFile)) {
+      $scope.index = $scope.ivd.getIndex($scope.selectFile);
+      //  show search form
+      $scope.display = true;
+      //  count the number of document in a file
+      $scope.tableHeader[$scope.selectFile] = $scope.ivd.allCounter[$scope.selectFile];
+    } else {
+      $scope.uploaded.pop();
+      return;
+    }
+  }
+
+  $scope.search = function() {
+    $scope.error = '';
+    if ($scope.searchIndex) {
+      if ($scope.selectContent) {
+        $scope.index = $scope.ivd.searchIndex($scope.searchIndex,$scope.selectContent);
+        if ($scope.index == false) {
+          $scope.error = 'Invalid search word entered';
+        }
+      } else {
+        $scope.error = 'You must select a file to search';
+      }
+    } else {
+      $scope.error = 'No search word found';
+    }
+  }
 });
