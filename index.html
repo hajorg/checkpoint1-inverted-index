@@ -1,38 +1,14 @@
 <!DOCTYPE html>
 <html ng-app="myApp">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="src/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="src/css/bootstrap.min.css">
-<!--
-        <link rel="stylesheet" href="src/css/font-awesome.min.css">
-        <link rel="stylesheet" href="src/css/fontawesome-webfont.woff">
--->
-        <script src="src/angular.js"></script>
-        <script src="src/inverted-index.js"></script>
-        <script src="src/app.js"></script>
-        <script src="https://use.fontawesome.com/34f5dbde04.js"></script>
-        
-    <style>
-      .navbar {
-        background:#337ab7;
-        border: none;
-        border-radius: 0;
-      }
-      .navbar-inverse .navbar-brand {
-        color: #FFF;
-      }
-      .navbar-inverse .navbar-nav> a {
-        background: #337ab7;
-      }
-      .navbar-inverse .navbar-nav>.active>a {
-        background: #337ab7;
-      }
-      .navbar-inverse .navbar-nav>.active>a:hover{
-        background: red;
-      }
-    </style>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="src/css/index.css">
+    <script src="https://use.fontawesome.com/34f5dbde04.js"></script>
+    <script src="https://opensource.keycdn.com/angularjs/1.5.8/angular.min.js "></script>
+    <script src="src/inverted-index.js"></script>
+    <script src="src/app.js"></script>
   </head>
   <body ng-controller="myController" ng-model="index">
     <nav class="navbar navbar-inverse">
@@ -48,7 +24,7 @@
     <div class="container-fluid">
       <div class="row">
         <h3 class="text-center" style="min-height: 26px;">{{ error }}</h3>
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="margin-bottom: 10px;">
           <label class="btn btn-primary" style="margin-bottom: 10px;">Upload File
           <input class="form-control" type="file" id="fileUploaded" multiple style="display: none;">
           </label>
@@ -85,7 +61,6 @@
               <thead style="background: #337ab7; color: white">
                 <tr>
                   <th style="text-align: center">Word</th>
-                  <!-- index[1] is a word<==>set map -->
                   <th style="text-align: center" ng-repeat="tableHead in tableHeader[key]">Doc {{tableHead + 1}}</th>            
                 </tr>
               </thead>    

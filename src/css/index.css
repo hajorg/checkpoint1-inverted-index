@@ -1,0 +1,17 @@
+.navbar {
+  background:#337ab7;
+  border: none;
+  border-radius: 0;
+}
+.navbar-inverse .navbar-brand {
+  color: #FFF;
+}
+.navbar-inverse .navbar-nav> a {
+  background: #337ab7;
+}
+.navbar-inverse .navbar-nav>.active>a {
+  background: #337ab7;
+}
+.navbar-inverse .navbar-nav>.active>a:hover{
+  background: red;
+}
