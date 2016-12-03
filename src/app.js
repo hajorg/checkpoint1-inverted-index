@@ -1,6 +1,15 @@
-let ivd = new InvertedIndex();
-var app = angular.module("myApp", []);
-app.controller("myController", function ($scope) {
+const app = angular.module('myApp', []);
+app.controller('myController', ($scope) => {
+  /**
+  * Returns a message
+  * @param {string} message - a message to be displayed to user
+  * @return {string} returns a string message
+  */
+  function showMessage(message) {
+    $scope.message = message;
+    $('#response-modal').modal();
+    $scope.$apply();
+  }
   $scope.error = '';
   $scope.invertedIndex = new InvertedIndex();
   //  Make search input file and button hidden
@@ -9,41 +18,49 @@ app.controller("myController", function ($scope) {
   $scope.uploaded = [];
   // get a list of documents in a file
   $scope.tableHeader = {};
-  //  Get the uploaded file
-  function checkJson(content, file) {
-    if (file.name.split(".")[1] !== "json") {
-      return "invalid json file";
+  /**
+  * Checks if a file is a valid json file
+  * @param {object} file - file contents
+  * @return {boolean} returns a boolean or string
+  */
+  function checkJson(file) {
+    if (file.name.split('.')[1] !== 'json') {
+      showMessage('invalid json file');
+      return;
     }
     return true;
   }
-  $scope.getFile = function (file) {
-    let reader = new FileReader();
-    reader.onloadend = e => {
-      try{
+  //  Get the uploaded file
+  $scope.getFile = (file) => {
+    checkJson(file);
+    $scope.error = '';
+    const reader = new FileReader();
+    reader.onloadend = (e) => {
+      try {
         $scope.invertedIndex.uploadedFiles[file.name] = JSON.parse(e.target.result);
         if (!$scope.invertedIndex.uploadedFiles[file.name][0]) {
           delete $scope.invertedIndex.uploadedFiles[file.name];
-          alert('Invalid file format');
+          showMessage('Invalid file format');
           return false;
         }
-        if($scope.uploaded.indexOf(file.name) === -1) {
+        if ($scope.uploaded.indexOf(file.name) === -1) {
           $scope.uploaded.push(file.name);
           $scope.$apply();
         }
-        }catch (e) {                
-          alert('Invalid json file');
-        }
+      } catch (err) {
+        showMessage('Invalid json file');
       }
-      reader.readAsText(file);
-  }
+    };
+    reader.readAsText(file);
+  };
   // Get uploaded file(s)
   document.getElementById('fileUploaded').addEventListener('change', (e) => {
-    for (let i = 0; i < e.target.files.length; i++) {
+    for (let i = 0; i < e.target.files.length; i += 1) {
       $scope.getFile(e.target.files[i]);
-      alert(e.target.files[i].name+' uploaded')
+      showMessage(`${e.target.files[i].name} uploaded`);
     }
   });
-  $scope.createIndex = function() {
+  $scope.createIndex = () => {
     $scope.error = '';
     if ($scope.selectFile === '' || $scope.selectFile === undefined) {
       $scope.error = 'You have to select a valid file to upload';
@@ -57,15 +74,15 @@ app.controller("myController", function ($scope) {
       $scope.tableHeader[$scope.selectFile] = $scope.invertedIndex.allCounter[$scope.selectFile];
     } else {
       $scope.uploaded.pop();
-      return;
+      return false;
     }
-  }
+  };
 
-  $scope.search = function() {
+  $scope.search = () => {
     $scope.error = '';
     if ($scope.searchIndex) {
       if ($scope.selectContent) {
-        $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex,$scope.selectContent);
+        $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex, $scope.selectContent);
         if ($scope.index === false) {
           $scope.error = 'Invalid search word entered';
         }
@@ -75,5 +92,5 @@ app.controller("myController", function ($scope) {
     } else {
       $scope.error = 'No search word found';
     }
-  }
+  };
 });
