@@ -112,22 +112,18 @@ class InvertedIndex {
   * @returns {object} The created index for a particular file
   */
   searchIndex(words, file = 'all') {
-    if (words.length > 0) {
-      words = InvertedIndex.converter(words);
-      if (!words) return false;
-      const result = {};
-      if (file !== 'all') {
-        const collection = InvertedIndex.searchMap(words, file, this.indexMap);
-        result[file] = collection;
-      } else {
-        Object.keys(this.indexMap).forEach((key) => {
-          const collection = InvertedIndex.searchMap(words, key, this.indexMap);
-          result[key] = collection;
-        });
-      }
-      return result;
+    if (words.length === 0) return {};
+    words = InvertedIndex.converter(words);
+    if (!words) return false;
+    const result = {};
+    if (file !== 'all') {
+      result[file] = InvertedIndex.searchMap(words, file, this.indexMap);
+    } else {
+      Object.keys(this.indexMap).forEach((key) => {
+        result[key] = InvertedIndex.searchMap(words, key, this.indexMap);
+      });
     }
-    return {};
+    return result;
   }
   /**
   * method checks if a word is present in a file

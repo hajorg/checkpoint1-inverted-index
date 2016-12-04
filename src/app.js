@@ -1,3 +1,4 @@
+/*  eslint-disable no-undef*/
 const app = angular.module('myApp', []);
 app.controller('myController', ($scope) => {
   /**
@@ -19,11 +20,11 @@ app.controller('myController', ($scope) => {
   // get a list of documents in a file
   $scope.tableHeader = {};
   /**
-  * Checks if a file is a valid json file
+  * Checks if the file extension is json
   * @param {object} file - file contents
   * @return {boolean} returns a boolean or string
   */
-  function checkJson(file) {
+  function checkJsonExt(file) {
     if (file.name.split('.')[1] !== 'json') {
       showMessage('invalid json file');
       return;
@@ -32,7 +33,7 @@ app.controller('myController', ($scope) => {
   }
   //  Get the uploaded file
   $scope.getFile = (file) => {
-    checkJson(file);
+    checkJsonExt(file);
     $scope.error = '';
     const reader = new FileReader();
     reader.onloadend = (e) => {
@@ -62,7 +63,7 @@ app.controller('myController', ($scope) => {
   });
   $scope.createIndex = () => {
     $scope.error = '';
-    if ($scope.selectFile === '' || $scope.selectFile === undefined) {
+    if ($scope.selectFile === '' || !$scope.selectFile) {
       $scope.error = 'You have to select a valid file to upload';
       return;
     }
@@ -77,13 +78,16 @@ app.controller('myController', ($scope) => {
       return false;
     }
   };
-
   $scope.search = () => {
     $scope.error = '';
     if ($scope.searchIndex) {
       if ($scope.selectContent) {
+        if ($scope.selectContent !== 'all' && !$scope.tableHeader[$scope.selectContent]) {
+          $scope.error = `You have not created index for ${$scope.selectContent}`;
+          return false;
+        }
         $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex, $scope.selectContent);
-        if ($scope.index === false) {
+        if (!$scope.index) {
           $scope.error = 'Invalid search word entered';
         }
       } else {

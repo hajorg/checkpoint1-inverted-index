@@ -1,7 +1,6 @@
 engines: 
   eslint:
     enabled: true
-    channel: "eslint-3"
     checks:
       fatal:
         enabled: false  
@@ -11,12 +10,8 @@ ratings:
 exclude_paths:
   - "jasmine/"
   - "spec/"
-  - "public/"
   - "gulpfile.js"
   - "lib/"
   - "*.js"
   - "coverage/"
-  - "src/angular.js"
   - "src/app.js"
-  - "src/jquery-3.1.1.min.js"
-  - "src/bootstrap.min.js"
