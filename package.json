@@ -17,6 +17,10 @@
     "url": "https://github.com/andela-jare/inverted-index/issues"
   },
   "homepage": "https://github.com/andela-jare/inverted-index#readme",
+  "dependencies": {
+    "browser-sync": "^2.18.2",
+    "gulp": "^3.9.1"
+  },
   "devDependencies": {
     "browser-sync": "^2.18.2",
     "coveralls": "^2.11.15",
