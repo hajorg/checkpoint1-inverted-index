@@ -4,6 +4,7 @@
   "description": "Inverted index for uploaded files",
   "main": "index.js",
   "scripts": {
+    "start": "node node_modules/gulp/bin/gulp",
     "test": "node_modules/karma/bin/karma start"
   },
   "repository": {
