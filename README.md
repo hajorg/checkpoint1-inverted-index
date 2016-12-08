@@ -20,9 +20,9 @@ This is a simple inverted index application that allows a user upload JSON files
 1. Clone the repository.
 2. Run npm install
 3. Run gulp to run the app
-4. Open SpecRunner.html in the jasmine folder to run test
+4. Run gulp test to see test result on SpecRunner
 5. Run npm test to also run test
-6. You can access the app on heroku via app-inverted-index.herokuapp.com
+6. You can access the app on heroku via [inverted index](https://app-inverted-index.herokuapp.com)
 
 #### Contributing
 
