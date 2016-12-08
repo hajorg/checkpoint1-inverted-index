@@ -1,5 +1,7 @@
+/* eslint amd:0 */
 const gulp = require('gulp');
 const browserSync = require('browser-sync');
+
 gulp.task('browserSyn', () => {
   browserSync.init({
     server: {
