@@ -1,3 +1,4 @@
+/* eslint no-unused-vars:0 */
 const file1 = [
   {
     title: 'Alice in Wonderland',

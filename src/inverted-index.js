@@ -61,7 +61,7 @@ class InvertedIndex {
         const title = InvertedIndex.converter(doc.title);
         const unicity = new Set(text.concat(title));
         const uniqueWords = Array.from(unicity.values());
-        InvertedIndex.mapper(uniqueWords, this.fileIndex, id);
+        InvertedIndex.indexMapper(uniqueWords, this.fileIndex, id);
       });
       this.indexMap[file] = this.fileIndex;
       this.allCounter[file] = this.counter;
@@ -87,7 +87,7 @@ class InvertedIndex {
   * @param {integer} id - the present document being accessed in the file
   * @returns {object} mapped object of the index created
   */
-  static mapper(uniqueWords, fileIndex, id) {
+  static indexMapper(uniqueWords, fileIndex, id) {
     Object.keys(uniqueWords).forEach((i) => {
       if (uniqueWords[i] in fileIndex) {
         fileIndex[uniqueWords[i]].push(id);

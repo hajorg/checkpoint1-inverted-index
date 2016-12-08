@@ -9,9 +9,26 @@ This is a simple inverted index application that allows a user upload JSON files
 - Create indexes from uploaded file.
 - Find a particular index.
 - Search created index.
+#### Technologies
+
+- Node.js
+- ECMAScript 6 (JavaScript 2015)
+- Angular.js
+
 ##### Usage
 
 1. Clone the repository.
 2. Run npm install
-3. Run gulp app to run the app
+3. Run gulp to run the app
 4. Open SpecRunner.html in the jasmine folder to run test
+5. Run npm test to also run test
+6. You can access the app on heroku via app-inverted-index.herokuapp.com
+
+#### Contributing
+
+1. Fork this repositry to your account.
+2. Clone your repositry: git clone https://github.com/andela-jare/checkpoint1-inverted-index.git
+3. Create your feature branch: git checkout -b new-feature
+4. Commit your changes: git commit -m "did something"
+5. Push to the remote branch: git push origin new-feature
+6. Open a pull request.
