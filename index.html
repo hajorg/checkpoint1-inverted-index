@@ -89,7 +89,10 @@
                 </div>
               </div>
           </form>
-          <div ng-repeat="(key, value) in index">
+          <div class="searchResult text-center" ng-show="showSearch">
+            <h3>Search Result</h3>
+          </div>
+          <div ng-repeat="(key, value) in index" class="table-container">
             <!-- title of File -->
             <h4 style="text-align: center; min-width: 100%; ">File : {{ key.replace('.json', '')}}</h4>
             <!-- Create table -->

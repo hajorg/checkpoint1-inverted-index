@@ -71,6 +71,7 @@ app.controller('myController', ($scope) => {
       $scope.index = $scope.invertedIndex.getIndex($scope.selectFile);
       //  show search form
       $scope.display = true;
+      $scope.showSearch = false;
       //  count the number of document in a file
       $scope.tableHeader[$scope.selectFile] = $scope.invertedIndex.allCounter[$scope.selectFile];
     } else {
@@ -87,6 +88,7 @@ app.controller('myController', ($scope) => {
           return false;
         }
         $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex, $scope.selectContent);
+        $scope.showSearch = true;
         if (!$scope.index) {
           $scope.error = 'Invalid search word entered';
         }
