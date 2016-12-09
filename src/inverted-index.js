@@ -98,18 +98,18 @@ class InvertedIndex {
     return fileIndex;
   }
   /**
-  * converts a string to lowercase and takes only word from it
-  * @param {string} string - The name of file to get generated index for.
-  * @returns {object} The created index for a particular file
+  * converts a string to lowercase and takes only words from it
+  * @param {string} string - a sentence or set of words
+  * @returns {array} returns an array of words in lowercase
   */
   static converter(string) {
     return string.toLowerCase().match(/\w+/g);
   }
   /**
   * creates a search based on users input on file(s) uploaded
-  * @param {string} words - A sentence to search for .
-  * @param {string} file - The name of file to get generated index for.
-  * @returns {object} The created index for a particular file
+  * @param {string} words - A sentence to search for.
+  * @param {string} file - The name of file to search for.
+  * @returns {object} The search index for file(s)
   */
   searchIndex(words, file = 'all') {
     if (words.length === 0) return {};
@@ -126,10 +126,10 @@ class InvertedIndex {
     return result;
   }
   /**
-  * method checks if a word is present in a file
+  * method checks if a word is present in an index of a file
   * @param {array} words - words to search for in a file
   * @param {string} filename - the name of the file being searched
-  * @param {object} indexMap - will houses the generated index for a file
+  * @param {object} indexMap - houses the generated search index for a file
   * @returns {object} mapped object of the search result
   */
   static searchMap(words, filename, indexMap) {

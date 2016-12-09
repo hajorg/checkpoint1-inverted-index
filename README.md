@@ -6,7 +6,7 @@
 This is a simple inverted index application that allows a user upload JSON files asynchronously, create an index of each uploaded JSON file, provided it has the properties of a title and a text, and also search through the indexed files.
 #### Features
 
-- Create indexes from uploaded file.
+- Create indices from uploaded file.
 - Find a particular index.
 - Search created index.
 #### Technologies
