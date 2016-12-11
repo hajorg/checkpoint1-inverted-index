@@ -35,6 +35,9 @@ app.controller('myController', ($scope) => {
   $scope.getFile = (file) => {
     checkJsonExt(file);
     $scope.error = '';
+    readFile(file);
+  };
+  function readFile(file) {
     const reader = new FileReader();
     reader.onloadend = (e) => {
       try {
@@ -53,7 +56,7 @@ app.controller('myController', ($scope) => {
       }
     };
     reader.readAsText(file);
-  };
+  }
   // Get uploaded file(s)
   document.getElementById('fileUploaded').addEventListener('change', (e) => {
     for (let i = 0; i < e.target.files.length; i += 1) {
@@ -81,19 +84,19 @@ app.controller('myController', ($scope) => {
   };
   $scope.search = () => {
     $scope.error = '';
-    if ($scope.searchIndex) {
-      if ($scope.selectContent) {
-        if ($scope.selectContent !== 'all' && !$scope.tableHeader[$scope.selectContent]) {
-          $scope.error = `You have not created index for ${$scope.selectContent}`;
-          return false;
-        }
-        $scope.index = $scope.invertedIndex.searchIndex($scope.searchIndex, $scope.selectContent);
-        $scope.showSearch = true;
-        if (!$scope.index) {
-          $scope.error = 'Invalid search word entered';
-        }
-      } else {
-        $scope.error = 'You must select a file to search';
+    if ($scope.searhTerms) {
+      if ($scope.fileChoice === '' || $scope.fileChoice === undefined) {
+        $scope.fileChoice = 'all';
+      }
+      if ($scope.fileChoice !== 'all' && !$scope.tableHeader[$scope.fileChoice]) {
+        $scope.error = `You have not created index for ${$scope.fileChoice}`;
+        return false;
+      }
+      let terms = $scope.searhTerms.toLowerCase().match(/\w+/g);
+      $scope.index = $scope.invertedIndex.searchIndex($scope.fileChoice, ...terms);
+      $scope.showSearch = true;
+      if (!$scope.index) {
+        $scope.error = 'Invalid search word entered';
       }
     } else {
       $scope.error = 'No search word found';

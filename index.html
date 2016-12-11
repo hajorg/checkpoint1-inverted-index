@@ -76,14 +76,14 @@
         <div class="col-sm-8">
           <form ng-show="display">
             <span class="col-xs-4">
-                <select ng-model="selectContent" class="form-control text-center">
+                <select ng-model="fileChoice" class="form-control text-center">
                   <option value="">--Select file to search--</option>
                   <option value="all" selected>All</option>
                   <option ng-repeat="key in uploaded" value="{{ key }}">{{ key }}</option>
                 </select>                  
               </span>
               <div class="input-group col-md-4">
-                <input type="text" class="form-control" id="searchTerms" name="searhTerms" placeholder="Search for words in file..." ng-model="searchIndex" ng-show="display"/>
+                <input type="text" class="form-control" id="searchTerms" name="searhTerms" placeholder="Search for words in file..." ng-model="searhTerms" ng-show="display"/>
                 <div class="input-group-btn">
                   <input type="button" id="searcher" value="search index" ng-click="search()" class="btn btn-primary"/>
                 </div>

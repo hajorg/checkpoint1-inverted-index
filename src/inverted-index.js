@@ -111,10 +111,10 @@ class InvertedIndex {
   * @param {string} file - The name of file to search for.
   * @returns {object} The search index for file(s)
   */
-  searchIndex(words, file = 'all') {
+  searchIndex(file = 'all', ...words) {
     if (words.length === 0) return {};
-    words = InvertedIndex.converter(words);
-    if (!words) return false;
+    // words = InvertedIndex.converter(words);
+    // if (!words) return false;
     const result = {};
     if (file !== 'all') {
       result[file] = InvertedIndex.searchMap(words, file, this.indexMap);
