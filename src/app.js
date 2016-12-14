@@ -31,13 +31,8 @@ app.controller('myController', ($scope) => {
     }
     return true;
   }
-  //  Get the uploaded file
-  $scope.getFile = (file) => {
-    checkJsonExt(file);
-    $scope.error = '';
-    readFile(file);
-  };
-  function readFile(file) {
+
+  const readFile = (file) => {
     const reader = new FileReader();
     reader.onloadend = (e) => {
       try {
@@ -56,7 +51,15 @@ app.controller('myController', ($scope) => {
       }
     };
     reader.readAsText(file);
-  }
+  };
+
+  //  Get the uploaded file
+  $scope.getFile = (file) => {
+    checkJsonExt(file);
+    $scope.error = '';
+    readFile(file);
+  };
+
   // Get uploaded file(s)
   document.getElementById('fileUploaded').addEventListener('change', (e) => {
     for (let i = 0; i < e.target.files.length; i += 1) {
@@ -64,6 +67,7 @@ app.controller('myController', ($scope) => {
       showMessage(`${e.target.files[i].name} uploaded`);
     }
   });
+
   $scope.createIndex = () => {
     $scope.error = '';
     if ($scope.selectFile === '' || !$scope.selectFile) {
@@ -82,6 +86,7 @@ app.controller('myController', ($scope) => {
       return false;
     }
   };
+
   $scope.search = () => {
     $scope.error = '';
     if ($scope.searhTerms) {
@@ -92,8 +97,8 @@ app.controller('myController', ($scope) => {
         $scope.error = `You have not created index for ${$scope.fileChoice}`;
         return false;
       }
-      let terms = $scope.searhTerms.toLowerCase().match(/\w+/g);
-      $scope.index = $scope.invertedIndex.searchIndex($scope.fileChoice, ...terms);
+      const terms = $scope.searhTerms.toLowerCase().match(/\w+/g);
+      $scope.index = $scope.invertedIndex.searchIndex($scope.fileChoice, terms);
       $scope.showSearch = true;
       if (!$scope.index) {
         $scope.error = 'Invalid search word entered';

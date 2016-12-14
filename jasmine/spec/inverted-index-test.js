@@ -3,7 +3,7 @@ describe('Inverted Index', () => {
   const indexer = new InvertedIndex();
 
   describe('Read book data', () => {
-    it('should read file and assert that file is a valid file', () => {
+    it('should read file and assert that file is a valid JSON file', () => {
       expect(InvertedIndex.isValidJson(JSON.stringify(file1))).toBe(true);
       expect(InvertedIndex.isValidJson(file1)).toBe('Invalid Json file');
     });
@@ -21,6 +21,16 @@ describe('Inverted Index', () => {
     });
   });
 
+  describe('Get Index', () => {
+    indexer.uploadedFiles['file1.json'] = file1;
+    indexer.createIndex('file1.json');
+    indexer.getIndex('file1.json');
+    
+    it('should ensure ​getIndex​ method takes a string argument that specifies the location of the JSON data.', () => {
+      expect(indexer.getIndex('file1.json')).toEqual(jasmine.any(Object));
+    });
+  });
+
   describe('Populate Index', () => {
     indexer.uploadedFiles['file1.json'] = file1;
     const creator = indexer.createIndex('file1.json');
@@ -34,6 +44,10 @@ describe('Inverted Index', () => {
     it('should verify that the index returned is an object', () => {
       expect(creator).toBe(true);
       expect(typeof indexed).toBe('object');
+    });
+
+    it('should ensure index is not overwritten by a new JSON file', () => {
+      expect(Object.keys(indexer.indexMap)).toEqual(['file1.json', 'file2.json']);
     });
   });
 
@@ -54,20 +68,26 @@ describe('Inverted Index', () => {
     });
 
     it('should ensure​ searchIndex can handle an array of search terms', () => {
-      expect(indexer.searchIndex('file1.json', ...['alice', 'a'])).toEqual({
-        'file1.json': { alice: [0, 1], a:[0, 1] }
+      expect(indexer.searchIndex('file1.json', 'of', ['alice', 'a'], 'an')).toEqual({
+        'file1.json': { of: [0, 1], alice: [0, 1], a: [0, 1], an: [0] }
+      });
+    });
+
+    it('should ensure searchIndex works for recursive arrays', () => {
+      expect(indexer.searchIndex('file1.json', ['alice', ['a', ['of']]], 'an')).toEqual({
+        'file1.json': { alice: [0, 1], a: [0, 1], of: [0, 1], an: [0] }
       });
     });
 
     it('should ensure searchIndex can handle a varied number of search terms as arguments', () => {
       expect(indexer.searchIndex('file1.json', 'alice', 'a')).toEqual({
-        'file1.json': { alice: [0, 1], a:[0, 1] }
+        'file1.json': { alice: [0, 1], a: [0, 1] }
       });
     });
 
     it('should return all the search terms which are present in index map ', () => {
       expect(indexer.searchIndex('all', 'alice', 'a')).toEqual({
-        'file1.json': { alice: [0, 1], a:[0, 1] }, 'file2.json': { alice: [0, 1], a:[0, 1] }
+        'file1.json': { alice: [0, 1], a: [0, 1] }, 'file2.json': { alice: [0, 1], a: [0, 1] }
       });
     });
   });
