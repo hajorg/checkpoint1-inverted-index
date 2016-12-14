@@ -25,7 +25,7 @@ describe('Inverted Index', () => {
     indexer.uploadedFiles['file1.json'] = file1;
     indexer.createIndex('file1.json');
     indexer.getIndex('file1.json');
-    
+
     it('should ensure ​getIndex​ method takes a string argument that specifies the location of the JSON data.', () => {
       expect(indexer.getIndex('file1.json')).toEqual(jasmine.any(Object));
     });
