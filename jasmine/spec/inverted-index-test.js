@@ -1,23 +1,23 @@
 /*  eslint-disable no-undef*/
 describe('Inverted Index', () => {
-  const indexer = new InvertedIndex();
+  const indexer = new InvertedIndex(Utility);
 
   describe('Read book data', () => {
     it('should read file and assert that file is a valid JSON file', () => {
-      expect(InvertedIndex.isValidJson(JSON.stringify(file1))).toBe(true);
-      expect(InvertedIndex.isValidJson(file1)).toBe('Invalid Json file');
+      expect(Utility.isValidJson(JSON.stringify(file1))).toBe(true);
+      expect(Utility.isValidJson(file1)).toBe('Invalid Json file');
     });
 
     it('should ensure the file content is actually a valid JSON Array', () => {
       indexer.uploadedFiles['file1.json'] = file1;
-      expect(indexer.checkJson('file1.json')).toBe(true);
+      expect(Utility.checkJson('file1.json', indexer.uploadedFiles)).toBe(true);
     });
 
     it('should ensure JSON array is not empty', () => {
       indexer.uploadedFiles['file1.json'] = file1;
       indexer.uploadedFiles['file2.json'] = file2;
-      expect(indexer.checkJson('file1.json')).toBe(true);
-      expect(indexer.checkJson('file2.json')).toBe(false);
+      expect(Utility.checkJson('file1.json', indexer.uploadedFiles)).toBe(true);
+      expect(Utility.checkJson('file2.json', indexer.uploadedFiles)).toBe(false);
     });
   });
 
@@ -53,7 +53,7 @@ describe('Inverted Index', () => {
 
   describe('Search Index', () => {
     let words = 'alice lord';
-    words = InvertedIndex.converter(words);
+    words = Utility.converter(words);
     indexer.uploadedFiles['file1.json'] = file1;
     indexer.uploadedFiles['file2.json'] = file1;
     indexer.createIndex('file1.json');

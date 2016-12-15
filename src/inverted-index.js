@@ -8,42 +8,14 @@ class InvertedIndex {
   /**
   * Called when InvertedIndex class is instantiated
   * @constructor
+  * @param {class} utility - a helper class
   */
-  constructor() {
+  constructor(utility) {
+    this.utility = utility;
     this.indexMap = {};
     this.uploadedFiles = {};
     this.allCounter = {};
     this.counter = [];
-  }
-
-  /**
-  * Checks if a file is a valid json
-  * @param {string} file - file contents
-  * @return {boolean} returns a boolean or string
-  */
-  static isValidJson(file) {
-    try {
-      JSON.parse(file);
-      return true;
-    } catch (err) {
-      return 'Invalid Json file';
-    }
-  }
-
-  /**
-  * Checks if a file name has a .json extension
-  * @param {string} file - file name
-  * @returns {boolean} returns a boolean or string
-  */
-  checkJson(file) {
-    const fileUploaded = this.uploadedFiles[file][0];
-    if (!fileUploaded) {
-      delete this.uploadedFiles[file];
-      return false;
-    }
-    if (fileUploaded.title && fileUploaded.text) {
-      return true;
-    }
   }
 
   /**
@@ -52,7 +24,7 @@ class InvertedIndex {
   * @returns {boolean} returns true if index is created
   */
   createIndex(file) {
-    if (this.checkJson(file)) {
+    if (this.utility.checkJson(file, this.uploadedFiles)) {
       this.counter = [];
       /*  An object that will hold each unique word
        and show which file the words are found
@@ -61,11 +33,11 @@ class InvertedIndex {
       //  Loop through an array of the json file
       this.uploadedFiles[file].forEach((doc, id) => {
         this.counter.push(id);
-        const text = InvertedIndex.converter(doc.text);
-        const title = InvertedIndex.converter(doc.title);
+        const text = this.utility.converter(doc.text);
+        const title = this.utility.converter(doc.title);
         const unicity = new Set(text.concat(title));
         const uniqueWords = Array.from(unicity.values());
-        InvertedIndex.indexMapper(uniqueWords, this.fileIndex, id);
+        this.utility.indexMapper(uniqueWords, this.fileIndex, id);
       });
       this.indexMap[file] = this.fileIndex;
       this.allCounter[file] = this.counter;
@@ -87,53 +59,6 @@ class InvertedIndex {
   }
 
   /**
-  * method maps each word to documents they are present in
-  * @param {array} uniqueWords - unique
-  * @param {object} fileIndex - will house the generated index for a file
-  * @param {integer} id - the present document being accessed in the file
-  * @returns {object} mapped object of the index created
-  */
-  static indexMapper(uniqueWords, fileIndex, id) {
-    Object.keys(uniqueWords).forEach((i) => {
-      if (uniqueWords[i] in fileIndex) {
-        fileIndex[uniqueWords[i]].push(id);
-      } else {
-        fileIndex[uniqueWords[i]] = [id];
-      }
-    });
-    return fileIndex;
-  }
-
-  /**
-  * converts a string to lowercase and takes only words from it
-  * @param {string} string - a sentence or set of words
-  * @returns {array} returns an array of words in lowercase
-  */
-  static converter(string) {
-    return string.toLowerCase().match(/\w+/g);
-  }
-
-  /**
-  * converts a string to lowercase and takes only words from it
-  * @param {...string} words - varied number of arguments
-  * @returns {array} returns all argument into a single array
-  */
-  static flatten(...words) {
-    const allWords = [];
-    const flatter = (...words) => {
-      words.forEach((word) => {
-        if (Array.isArray(word)) {
-          flatter(...word);
-        } else {
-          allWords.push(word);
-        }
-      });
-    };
-    flatter(...words);
-    return allWords;
-  }
-
-  /**
   * creates a search based on users input on file(s) uploaded
   * @param {string} file - The name of file to search for.
   * @param {...string} words - A sentence to search for.
@@ -141,30 +66,16 @@ class InvertedIndex {
   */
   searchIndex(file = 'all', ...words) {
     if (words.length === 0) return {};
-    const allWords = InvertedIndex.flatten(...words);
+    const allWords = this.utility.flatten(...words);
     const result = {};
     if (file !== 'all') {
-      result[file] = InvertedIndex.searchMap(allWords, file, this.indexMap);
+      result[file] = this.utility.searchMap(allWords, file, this.indexMap);
     } else {
       Object.keys(this.indexMap).forEach((key) => {
-        result[key] = InvertedIndex.searchMap(allWords, key, this.indexMap);
+        result[key] = this.utility.searchMap(allWords, key, this.indexMap);
       });
     }
     return result;
   }
 
-  /**
-  * method checks if a word is present in an index of a file
-  * @param {array} words - words to search for in a file
-  * @param {string} filename - the name of the file being searched
-  * @param {object} indexMap - houses the generated search index for a file
-  * @returns {object} mapped object of the search result
-  */
-  static searchMap(words, filename, indexMap) {
-    const collection = {};
-    words.forEach((word) => {
-      collection[word] = indexMap[filename][word];
-    });
-    return collection;
-  }
 }

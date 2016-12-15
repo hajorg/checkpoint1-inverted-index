@@ -12,7 +12,8 @@ app.controller('myController', ($scope) => {
     $scope.$apply();
   }
   $scope.error = '';
-  $scope.invertedIndex = new InvertedIndex();
+  //  Instantiate invertedIndex class
+  $scope.invertedIndex = new InvertedIndex(Utility);
   //  Make search input file and button hidden
   $scope.display = false;
   //  Get a list names of the uploaded files
